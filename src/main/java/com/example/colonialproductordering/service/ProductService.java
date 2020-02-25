@@ -15,4 +15,8 @@ public class ProductService {
         productRepository.save(product);
         return "Person Created";
     }
+
+    public Product search(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
+    }
 }

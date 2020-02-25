@@ -24,6 +24,11 @@ public class ProductController {
         return productRepository.findAll();
     }
 
+    @GetMapping("search/{name}")
+    public Product search(@PathVariable("name") String name){
+        return productService.search(name);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Product> save(@RequestBody Product product){
         productService.save(product);
