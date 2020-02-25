@@ -1,13 +1,13 @@
 package com.example.colonialproductordering.rest.controller;
 
 import com.example.colonialproductordering.model.Product;
+import com.example.colonialproductordering.repository.ProductRepository;
 import com.example.colonialproductordering.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -15,6 +15,14 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    ProductRepository productRepository;
+
+    @GetMapping("/all-product")
+    public List<Product> findAll(){
+        return productRepository.findAll();
+    }
 
     @PostMapping("/add")
     public ResponseEntity<Product> save(@RequestBody Product product){
