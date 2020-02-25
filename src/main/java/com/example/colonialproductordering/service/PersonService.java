@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 public class PersonService {
 
     @Autowired
-    PersonRepository repository;
+    PersonRepository personRepository;
 
     public String save(Person person){
-        repository.save(person);
+        personRepository.save(person);
         return "Person Created";
     }
 

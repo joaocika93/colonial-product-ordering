@@ -1,7 +1,7 @@
 package com.example.colonialproductordering.rest.controller;
 
-import com.example.colonialproductordering.model.Person;
-import com.example.colonialproductordering.service.PersonService;
+import com.example.colonialproductordering.model.Product;
+import com.example.colonialproductordering.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,18 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/person")
-public class PersonController {
+@RequestMapping("/product")
+public class ProductController {
 
     @Autowired
-    PersonService personService;
+    ProductService productService;
 
     @PostMapping("/add")
-    public ResponseEntity<Person> save(@RequestBody Person person){
-        personService.save(person);
-        return ResponseEntity.ok().body(person);
+    public ResponseEntity<Product> save(@RequestBody Product product){
+        productService.save(product);
+        return ResponseEntity.ok().body(product);
     }
-
-
-
 }
