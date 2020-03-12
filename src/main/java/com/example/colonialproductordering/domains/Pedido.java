@@ -18,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Pedido implements Serializable {
@@ -31,9 +32,6 @@ public class Pedido implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date instante;
 
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
-	private Pagamento pagamento;
-
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
@@ -42,7 +40,8 @@ public class Pedido implements Serializable {
 	@JoinColumn(name = "endereco_de_id")
 	private Endereco enderecoDeEntrega;
 
-	@OneToMany(mappedBy="id.pedido")
+	@OneToMany
+	@JoinColumn(name = "id_item_pedido", referencedColumnName = "id")
 	private Set<ItemPedido> itens = new HashSet<>();
 	
 	public Pedido() {
@@ -73,14 +72,6 @@ public class Pedido implements Serializable {
 		this.instante = instante;
 	}
 
-	public Pagamento getPagamento() {
-		return pagamento;
-	}
-
-	public void setPagamento(Pagamento pagamento) {
-		this.pagamento = pagamento;
-	}
-
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -97,7 +88,6 @@ public class Pedido implements Serializable {
 		this.enderecoDeEntrega = enderecoDeEntrega;
 	}
 
-
 	public Set<ItemPedido> getItens() {
 		return itens;
 	}
@@ -105,7 +95,7 @@ public class Pedido implements Serializable {
 	public void setItens(Set<ItemPedido> itens) {
 		this.itens = itens;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -1,34 +1,35 @@
 package com.example.colonialproductordering.domains;
 
-import java.io.Serializable;
-
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 public class ItemPedido implements Serializable{
 	private static final long serialVersionUID = 1L;
-	
-	@JsonIgnore
-	@EmbeddedId
-	private ItemPedidoPK id = new ItemPedidoPK();
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	private Double desconto;
 	private Integer quantidade;
 	private Double preco;
+
+	@ManyToOne
+	@JoinColumn(name="produto_id")
+	private Produto produto;
 
 	public ItemPedido() {
 
 	}
 
-	public ItemPedido(Pedido pedido, Produto produto, Double desconto, Integer quantidade, Double preco) {
-		super();
-		this.id.setPedido(pedido);
-		this.id.setProduto(produto);
+	public ItemPedido(Integer id, Double desconto, Integer quantidade, Double preco, Pedido pedido, Produto produto) {
+		this.id = id;
 		this.desconto = desconto;
 		this.quantidade = quantidade;
 		this.preco = preco;
+		this.produto = produto;
 	}
 
 	public Double getDesconto() {
@@ -55,21 +56,20 @@ public class ItemPedido implements Serializable{
 		this.preco = preco;
 	}
 
-	public ItemPedidoPK getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(ItemPedidoPK id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	@JsonIgnore
-	public Pedido getPedido() {
-		return id.getPedido();
+	public Produto getProduto() {
+		return produto;
 	}
 
-	public Produto getProduto() {
-		return id.getProduto();
+	public void setProduto(Produto produto) {
+		this.produto = produto;
 	}
 
 	@Override

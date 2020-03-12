@@ -1,20 +1,13 @@
 package com.example.colonialproductordering.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Produto implements Serializable {
@@ -24,37 +17,29 @@ public class Produto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
+	private  String descricao;
+	private String imagem;
+	private Integer favorito;
 	private Double preco;
 
 	@JsonIgnore
-	@ManyToMany
-	@JoinTable(name = "PRODUTO_CATEGORIA", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
-	private List<Categoria> categorias = new ArrayList<>();
-
-	@JsonIgnore
-	@OneToMany(mappedBy="id.produto")
+	@OneToMany(mappedBy="produto")
 	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Produto() {
 
 	}
 
-	public Produto(Integer id, String nome, Double preco) {
-		super();
+	public Produto(Integer id, String nome, String descricao, String imagem, Integer favorito, Double preco, Set<ItemPedido> itens) {
 		this.id = id;
 		this.nome = nome;
+		this.descricao = descricao;
+		this.imagem = imagem;
+		this.favorito = favorito;
 		this.preco = preco;
+		this.itens = itens;
 	}
 
-	@JsonIgnore
-	public List<Pedido> getPedidos(){
-		List<Pedido> lista = new ArrayList<>();
-		
-		for(ItemPedido x : itens) {
-			lista.add(x.getPedido());
-		}
-		return lista;
-	}
 	public Integer getId() {
 		return id;
 	}
@@ -79,15 +64,31 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 
-	public List<Categoria> getCategorias() {
-		return categorias;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public void setCategorias(List<Categoria> categorias) {
-		this.categorias = categorias;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	public Set<ItemPedido> getItens() {
+    public String getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
+
+    public Integer getFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(Integer favorito) {
+        this.favorito = favorito;
+    }
+
+    public Set<ItemPedido> getItens() {
 		return itens;
 	}
 

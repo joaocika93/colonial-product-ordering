@@ -15,7 +15,7 @@ import java.util.List;
 public class PedidoResource {
 	
 	@Autowired
-	private PedidoService service;
+	private PedidoService pedidoService;
 
 	@Autowired
 	private PedidoRepository pedidoRepository;
@@ -23,7 +23,7 @@ public class PedidoResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
 
-		Pedido obj = service.buscar(id);
+		Pedido obj = pedidoService.buscar(id);
 
 		return ResponseEntity.ok().body(obj);
 	}
@@ -33,7 +33,7 @@ public class PedidoResource {
 
 	@PostMapping("/add")
 	public String save(@RequestBody Pedido pedido){
-		return service.save(pedido);
+		return pedidoService.save(pedido);
 	}
 
 }

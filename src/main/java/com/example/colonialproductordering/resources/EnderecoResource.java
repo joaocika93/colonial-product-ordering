@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/endereco")
-public class EnderecoResources {
+public class EnderecoResource {
 
     @Autowired
     EnderecoRepository enderecoRepository;
