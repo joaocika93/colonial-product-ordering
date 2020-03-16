@@ -1,6 +1,7 @@
 package com.example.colonialproductordering.resources;
 
 import com.example.colonialproductordering.domains.Cidade;
+import com.example.colonialproductordering.domains.Cliente;
 import com.example.colonialproductordering.domains.Endereco;
 import com.example.colonialproductordering.domains.Estado;
 import com.example.colonialproductordering.repositories.CidadeRepository;
@@ -8,8 +9,10 @@ import com.example.colonialproductordering.repositories.EnderecoRepository;
 import com.example.colonialproductordering.repositories.EstadoRepository;
 import com.example.colonialproductordering.services.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -47,6 +50,13 @@ public class EnderecoResource {
     public String save(@RequestBody Endereco endereco) {
         System.out.println(endereco);
         return enderecoService.saveEndereco(endereco);
+    }
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> find(@PathVariable Integer id) {
+
+        Endereco obj = enderecoService.buscar(id);
+
+        return ResponseEntity.ok().body(obj);
     }
 
 }

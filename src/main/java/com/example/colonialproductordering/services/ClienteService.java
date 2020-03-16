@@ -12,6 +12,8 @@ import com.example.colonialproductordering.services.exceptions.ObjectNotFoundExc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,45 +34,36 @@ public class ClienteService {
 	@Autowired
 	private CidadeRepository cidadeRepository;
 
-	public Cliente buscar(Integer id) {
+	public Cliente buscar(Long id) {
 		Optional<Cliente> obj = clienteRepository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
+	}
+
+	public Cliente buscarUsuario(String nome){
+		return clienteRepository.findByUsuario(nome);
 	}
 
 	public String save(Cliente cliente){
 		Cliente cliente0 = new Cliente();
 		cliente0.setEnderecos(null);
 		cliente0.setId(cliente.getId());
-		cliente0.setCpfOuCnpj(cliente.getCpfOuCnpj());
 		cliente0.setEmail(cliente.getEmail());
 		cliente0.setNome(cliente.getNome());
+		cliente0.setImagem(cliente.getImagem());
+		cliente0.setGoogleId(cliente.getGoogleId());
 		cliente0.setTelefones(cliente.getTelefones());
 		clienteRepository.save(cliente0);
 
-		Estado estado = new Estado();
-		estado.setId(cliente.getEnderecos().get(0).getCidade().getEstado().getId());
-		estado.setNome(cliente.getEnderecos().get(0).getCidade().getEstado().getNome());
+		Endereco endereco = enderecoService.buscar(cliente.getEnderecos().get(0).getId());
+		endereco.setCliente(cliente0);
 
-		Cidade cidade = new Cidade();
-		cidade.setId(cliente.getEnderecos().get(0).getCidade().getId());
-		cidade.setNome(cliente.getEnderecos().get(0).getCidade().getNome());
-		cidade.setEstado(estado);
-
-		Endereco endereco = new Endereco();
-		endereco.setCidade(cidade);
-		endereco.setId(cliente.getEnderecos().get(0).getId());
-		endereco.setBairro(cliente.getEnderecos().get(0).getBairro());
-		endereco.setLogradouro(cliente.getEnderecos().get(0).getLogradouro());
-		endereco.setCep(cliente.getEnderecos().get(0).getCep());
-		endereco.setComplemento(cliente.getEnderecos().get(0).getComplemento());
-		endereco.setNumero(cliente.getEnderecos().get(0).getNumero());
-		endereco.setCliente(cliente);
-
-		estadoRepository.save(estado);
-		cidadeRepository.save(cidade);
 		enderecoRepository.save(endereco);
-		clienteRepository.save(cliente);
+		List<Endereco> enderecoList = new ArrayList<>();
+		enderecoList.add(endereco);
+		cliente0.setEnderecos(enderecoList);
+
+		clienteRepository.save(cliente0);
 		return "Salvo com sucesso";
 	}
 

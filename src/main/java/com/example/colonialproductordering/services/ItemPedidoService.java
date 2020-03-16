@@ -1,7 +1,6 @@
 package com.example.colonialproductordering.services;
 
 import com.example.colonialproductordering.domains.ItemPedido;
-import com.example.colonialproductordering.domains.Pedido;
 import com.example.colonialproductordering.domains.Produto;
 import com.example.colonialproductordering.repositories.ItemPedidoRepository;
 import com.example.colonialproductordering.services.exceptions.ObjectNotFoundException;

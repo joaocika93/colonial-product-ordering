@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ public class ClienteResource {
     ClienteRepository clienteRepository;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> find(@PathVariable Integer id) {
+    public ResponseEntity<?> find(@PathVariable Long id) {
 
         Cliente obj = clienteService.buscar(id);
 
@@ -35,5 +36,10 @@ public class ClienteResource {
     @PostMapping("/add")
     public String save(@RequestBody Cliente cliente) {
         return clienteService.save(cliente);
+    }
+
+    @GetMapping("/buscar/{nome}")
+    public Cliente buscarUsuario(@PathVariable("nome") String nome){
+        return clienteService.buscarUsuario(nome);
     }
 }
