@@ -32,7 +32,13 @@ public class ClienteService {
 	private EstadoRepository estadoRepository;
 
 	@Autowired
+	private  EstadoService estadoService;
+
+	@Autowired
 	private CidadeRepository cidadeRepository;
+
+	@Autowired
+	private CidadeService cidadeService;
 
 	public Cliente buscar(Long id) {
 		Optional<Cliente> obj = clienteRepository.findById(id);
@@ -40,31 +46,44 @@ public class ClienteService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 
-	public Cliente buscarUsuario(String nome){
-		return clienteRepository.findByUsuario(nome);
+	public Cliente buscarUsuario(String googleId){
+		return clienteRepository.findByUsuario(googleId);
 	}
 
-	public String save(Cliente cliente){
-		Cliente cliente0 = new Cliente();
-		cliente0.setEnderecos(null);
-		cliente0.setId(cliente.getId());
-		cliente0.setEmail(cliente.getEmail());
-		cliente0.setNome(cliente.getNome());
-		cliente0.setImagem(cliente.getImagem());
-		cliente0.setGoogleId(cliente.getGoogleId());
-		cliente0.setTelefones(cliente.getTelefones());
-		clienteRepository.save(cliente0);
+	public String save(Cliente cliente) {
+		if (cidadeRepository.findByCidade(cliente.getEnderecos().get(0).getCidade().getNome()) == null) {
+			return "Cidade não encontrada";
+		} else {
+			clienteRepository.save(cliente);
+			List<Cidade> cidadeList = cidadeRepository.findByCidade(cliente.getEnderecos().get(0).getCidade().getNome());
 
-		Endereco endereco = enderecoService.buscar(cliente.getEnderecos().get(0).getId());
-		endereco.setCliente(cliente0);
+			Estado estado;
+			Cidade thisCidade = new Cidade();
+			for (Cidade cidade : cidadeList) {
+				estado = estadoService.buscar(cidade.getEstado().getId());
+				if(estado.getUf().equalsIgnoreCase(cliente.getEnderecos().get(0).getCidade().getEstado().getUf())){
+					thisCidade = cidade;
+					break;
+				}
+			}
 
-		enderecoRepository.save(endereco);
-		List<Endereco> enderecoList = new ArrayList<>();
-		enderecoList.add(endereco);
-		cliente0.setEnderecos(enderecoList);
 
-		clienteRepository.save(cliente0);
-		return "Salvo com sucesso";
+			Endereco endereco = new Endereco();
+			endereco.setCidade(thisCidade);
+			endereco.setCep(cliente.getEnderecos().get(0).getCep());
+			endereco.setNumero(cliente.getEnderecos().get(0).getNumero());
+			endereco.setLogradouro(cliente.getEnderecos().get(0).getLogradouro());
+			endereco.setBairro(cliente.getEnderecos().get(0).getBairro());
+			endereco.setCliente(cliente);
+			enderecoRepository.save(endereco);
+
+			List<Endereco> enderecoList = new ArrayList<>();
+			enderecoList.add(endereco);
+			cliente.setEnderecos(enderecoList);
+
+			clienteRepository.save(cliente);
+
+			return "Salvo com sucesso";
+		}
 	}
-
 }

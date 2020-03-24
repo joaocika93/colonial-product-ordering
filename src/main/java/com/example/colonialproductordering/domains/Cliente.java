@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Cliente implements Serializable {
@@ -18,16 +15,16 @@ public class Cliente implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String googleId;
+    private String tokenId;
     private String nome;
     private String email;
     private String imagem;
+    private String cpf;
+    private String telefone;
+    private Boolean logado;
 
     @OneToMany(mappedBy = "cliente")
     private List<Endereco> enderecos = new ArrayList<>();
-
-    @ElementCollection
-    @CollectionTable(name = "TELEFONE")
-    private Set<String> telefones = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "cliente")
@@ -37,13 +34,17 @@ public class Cliente implements Serializable {
 
     }
 
-    public Cliente(Long id, String googleId, String nome, String email, String imagem) {
+    public Cliente(Long id, String googleId, String nome, String email, String imagem, String cpf, String tokenId, String telefone, Boolean logado) {
         super();
         this.id = id;
         this.googleId = googleId;
         this.nome = nome;
         this.email = email;
         this.imagem = imagem;
+        this.cpf = cpf;
+        this.telefone = telefone;
+        this.tokenId = tokenId;
+        this.logado = logado;
     }
 
     public Long getId() {
@@ -86,20 +87,44 @@ public class Cliente implements Serializable {
         this.imagem = imagem;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
+
+    public Boolean getLogado() {
+        return logado;
+    }
+
+    public void setLogado(Boolean logado) {
+        this.logado = logado;
+    }
+
     public List<Endereco> getEnderecos() {
         return enderecos;
     }
 
     public void setEnderecos(List<Endereco> enderecos) {
         this.enderecos = enderecos;
-    }
-
-    public Set<String> getTelefones() {
-        return telefones;
-    }
-
-    public void setTelefones(Set<String> telefones) {
-        this.telefones = telefones;
     }
 
     public List<Pedido> getPedidos() {

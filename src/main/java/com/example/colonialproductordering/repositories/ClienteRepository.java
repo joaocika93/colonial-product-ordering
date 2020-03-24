@@ -10,7 +10,7 @@ import java.math.BigInteger;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
-    @Query("SELECT cliente FROM Cliente cliente WHERE cliente.email = ?1")
-    Cliente findByUsuario(String usuario);
+    @Query("SELECT cliente FROM Cliente cliente WHERE cliente.googleId = ?1")
+    Cliente findByUsuario(String googleId);
 
 }

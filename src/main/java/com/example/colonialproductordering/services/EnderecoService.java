@@ -11,7 +11,10 @@ import com.example.colonialproductordering.services.exceptions.ObjectNotFoundExc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
+import static org.apache.commons.lang3.StringUtils.upperCase;
 
 @Service
 public class EnderecoService {
@@ -23,10 +26,7 @@ public class EnderecoService {
     CidadeRepository cidadeRepository;
 
     @Autowired
-    EstadoRepository estadoRepository;
-
-    @Autowired
-    ClienteService clienteService;
+    EstadoService estadoService;
 
     public Endereco buscar(Integer id) {
         Optional<Endereco> obj = enderecoRepository.findById(id);
@@ -34,22 +34,26 @@ public class EnderecoService {
                 "Objeto não encontrado! Id: " + id + ", Tipo: " + Endereco.class.getName()));
     }
 
-    public String saveEndereco(Endereco endereco){
-        System.out.println();
-        Estado estado = new Estado();
-        estado.setId(endereco.getCidade().getEstado().getId());
-        estado.setNome(endereco.getCidade().getEstado().getNome());
+    public String saveEndereco(Endereco endereco) {
+        if (cidadeRepository.findByCidade(endereco.getCidade().getNome()) == null) {
+            return "Cidade não encontrada";
+        } else {
+            List<Cidade> cidadeList = cidadeRepository.findByCidade(endereco.getCidade().getNome());
 
-        Cidade cidade = new Cidade();
-        cidade.setEstado(estado);
-        cidade.setNome(endereco.getCidade().getNome());
-        cidade.setId(endereco.getCidade().getId());
+            Estado estado;
+            Cidade thisCidade = new Cidade();
+            for (Cidade cidade : cidadeList) {
+                estado = estadoService.buscar(cidade.getEstado().getId());
+                if(estado.getUf().equalsIgnoreCase(endereco.getCidade().getEstado().getUf())){
+                    thisCidade = cidade;
+                    break;
+                }
+            }
 
-        estadoRepository.save(estado);
-        cidade.setEstado(estado);
-        cidadeRepository.save(cidade);
-        endereco.setCidade(cidade);
-        enderecoRepository.save(endereco);
-        return "Salvo com Sucesso";
+            endereco.setCidade(thisCidade);
+
+            enderecoRepository.save(endereco);
+            return "Salvo com Sucesso";
+        }
     }
 }
