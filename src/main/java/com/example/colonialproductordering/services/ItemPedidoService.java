@@ -7,6 +7,7 @@ import com.example.colonialproductordering.services.exceptions.ObjectNotFoundExc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,10 +32,20 @@ public class ItemPedidoService {
     public String save(ItemPedido itemPedido) {
         Produto produto = produtoService.buscar(itemPedido.getProduto().getId());
 
-        itemPedido.setProduto(produto);
+        Double preco = itemPedido.getPreco();
+        Integer quantidade = itemPedido.getQuantidade();
 
+        preco = preco * quantidade;
+
+        itemPedido.setPreco(preco);
+
+        itemPedido.setProduto(produto);
         itemPedidoRepository.save(itemPedido);
         return "Salvo com Sucesso";
+    }
+
+    public List<ItemPedido> findByUsuario(String googleId){
+        return itemPedidoRepository.findByUsuario(googleId);
     }
 
 }

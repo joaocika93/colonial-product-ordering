@@ -1,6 +1,7 @@
 package com.example.colonialproductordering.services;
 
 import com.example.colonialproductordering.domains.Cliente;
+import com.example.colonialproductordering.domains.ItemPedido;
 import com.example.colonialproductordering.domains.Pedido;
 import com.example.colonialproductordering.domains.Produto;
 import com.example.colonialproductordering.repositories.ItemPedidoRepository;
@@ -10,6 +11,7 @@ import com.example.colonialproductordering.services.exceptions.ObjectNotFoundExc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,9 @@ public class PedidoService {
 
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+
+	@Autowired
+	private ItemPedidoService itemPedidoService;
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
@@ -47,9 +52,13 @@ public class PedidoService {
 //				"enderecoDeEntrega": null,
 //				"itens": []
 //		}
-		Cliente cliente = clienteService.buscar(pedido.getCliente().getId());
+		Cliente cliente = clienteService.buscarUsuario(pedido.getCliente().getGoogleId());
 		pedido.setCliente(cliente);
 		pedido.setEnderecoDeEntrega(cliente.getEnderecos().get(0));
+		List<ItemPedido> itemPedidos = itemPedidoService.findByUsuario(pedido.getCliente().getGoogleId());
+		pedido.setItens(itemPedidos);
+
+
 		pedidoRepository.save(pedido);
 		return "Salvo com Sucesso";
 	}

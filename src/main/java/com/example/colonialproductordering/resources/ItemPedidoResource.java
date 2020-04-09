@@ -23,9 +23,22 @@ public class ItemPedidoResource {
         return itemPedidoRepository.findAll();
     }
 
+    @GetMapping("/buscar/{googleId}")
+    public List<ItemPedido> findByUsuario(@PathVariable("googleId") String googleId){
+        return itemPedidoService.findByUsuario(googleId);
+    }
+
+    @GetMapping("/countitens/{googleId}")
+    public Integer contByUsuario(@PathVariable("googleId") String googleId){
+        List<ItemPedido> itemPedidos = itemPedidoService.findByUsuario(googleId);
+        return itemPedidos.size();
+    }
+
     @PostMapping("/add")
     public String save(@RequestBody ItemPedido itemPedido){
         System.out.println(itemPedido);
         return itemPedidoService.save(itemPedido);
     }
+
+
 }
