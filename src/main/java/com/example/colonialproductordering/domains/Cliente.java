@@ -22,6 +22,7 @@ public class Cliente implements Serializable {
     private String cpf;
     private String telefone;
     private Boolean logado;
+    private Boolean administrador;
 
     @OneToMany(mappedBy = "cliente")
     private List<Endereco> enderecos = new ArrayList<>();
@@ -34,7 +35,7 @@ public class Cliente implements Serializable {
 
     }
 
-    public Cliente(Long id, String googleId, String nome, String email, String imagem, String cpf, String tokenId, String telefone, Boolean logado) {
+    public Cliente(Long id, String googleId, String nome, String email, String imagem, String cpf, String tokenId, String telefone, Boolean logado, Boolean administrador) {
         super();
         this.id = id;
         this.googleId = googleId;
@@ -45,6 +46,7 @@ public class Cliente implements Serializable {
         this.telefone = telefone;
         this.tokenId = tokenId;
         this.logado = logado;
+        this.administrador = administrador;
     }
 
     public Long getId() {
@@ -135,6 +137,13 @@ public class Cliente implements Serializable {
         this.pedidos = pedidos;
     }
 
+    public Boolean getAdministrador() {
+        return administrador;
+    }
+
+    public void setAdministrador(Boolean administrador) {
+        this.administrador = administrador;
+    }
 
     @Override
     public int hashCode() {
